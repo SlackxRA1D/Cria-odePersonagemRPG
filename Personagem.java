@@ -1,9 +1,12 @@
+package Personagem;
+
 public class Personagem {
 
     String nome;
+    int idade;
+    String sexo;
     String classe;
     String arma;
-    String sexo;
     int hp;
     int mp;
     int level;
@@ -12,8 +15,7 @@ public class Personagem {
     int intel;
     int agilidade;
     int danoarma;
-    int idade;
-    
+
     public Personagem() {
         this.nome = "João";
         this.classe = "Guerreiro";
@@ -25,7 +27,15 @@ public class Personagem {
         this.forca = 5;
         this.intel = 5;
     }
-
+    
+    public void setSexo(String sexo){
+        this.sexo = sexo;
+    }
+    
+    public String getSexo(){
+        return sexo;
+    }
+    
     public int getLevel() {
         return level;
     }
@@ -97,25 +107,23 @@ public class Personagem {
     public void setAgilidade(int agilidade) {
         this.agilidade += agilidade;
     }
-    
-    public void Informacao(){
-        System.out.println("Nome: "+ this.nome.toUpperCase());
+
+    public void Informacao() {
+        System.out.println("Nome: " + this.nome.toUpperCase());
         System.out.println("Classe: " + this.getClasse());
-        System.out.println("Level: " + this.getLevel()+ "   EXP: " + this.getXp()+"/100");
-        System.out.println("Agilidade: "+ this.getAgilidade());
-        System.out.println("Inteligencia: "+ this.getIntel());
-        System.out.println("Força: "+ this.getForca());
-        System.out.println("Vida: "+ this.getHp());
-        System.out.println("Mana: "+ this.getMp());
-        
+        System.out.println("Level: " + this.getLevel() + "   EXP: " + this.getXp() + "/100");
+        System.out.println("Agilidade: " + this.getAgilidade());
+        System.out.println("Inteligencia: " + this.getIntel());
+        System.out.println("Força: " + this.getForca());
+        System.out.println("Vida: " + this.getHp());
+        System.out.println("Mana: " + this.getMp());
+
     }
-       
+
     public static void main(String[] args) {
         Personagem p = new Personagem();
-        
+
         p.Informacao();
-                
-   
+
+    }
 }
-}
-    

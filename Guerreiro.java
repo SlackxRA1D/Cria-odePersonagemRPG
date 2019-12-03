@@ -1,3 +1,8 @@
+package Personagem;
+
+
+import Personagem.Personagem;
+
 public class Guerreiro extends Personagem {
     Guerreiro(){
     this.nome = "João";
