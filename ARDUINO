@@ -1,0 +1,29 @@
+#include <Servo.h>
+
+int pos = 0;
+
+Servo servo_9;
+
+int counter;
+
+void setup()
+{
+  servo_9.attach(9);
+
+}
+
+void loop()
+{
+
+  for (counter = 0; counter <= 1; ++counter) {
+    for (pos = 90; pos <= 180; pos += 1) {
+      servo_9.write(pos);
+      delay(15); // Wait for 15 millisecond(s)
+    }
+    delay(4000); // Wait for 4000 millisecond(s)
+    for (pos = 180; pos >= 90; pos -= 1) {
+      servo_9.write(pos);
+      delay(15); // Wait for 15 millisecond(s)
+    }
+  }
+}
