@@ -13,6 +13,8 @@ int pos = 0;
 Servo servo_9;
 int counter;
 
+boolean status = false;
+
 void setup()
 {
   servo_9.attach(9);
@@ -35,6 +37,7 @@ void moverServo() {
       delay(15); // Wait for 15 millisecond(s)
     }
   }
+  status = !status;
 }
 
 void loop()
@@ -66,31 +69,36 @@ void loop()
 
           client.println("<HTML>");
           client.println("<HEAD>");
+          client.println("<meta http-equiv=\"refresh\" content=\"5\";>");
           client.println("<TITLE>Despejar Cloro</TITLE>");
           client.println("</HEAD>");
-          client.println("<BODY>");
+          client.println("<BODY style=background-color:#2e405c>");
 
-          client.println("<H1>Clique para despejar o cloro.</H1>");
+          client.println("<center><H1><p style =\"font - family: fantasy; font - weight: 100\"><font color=\"white\">Deseja despejar o cloro?</H1></center>");
 
-          client.println("<a href=\"/?acionar\"\">DESPEJAR</a>");
-          
-          client.println("<a href=\"/?acionar\"\">DESPEJAR</a>");
-          
+          client.println("<BR> </BR >");
+          client.println("<center><form method=get name=MANUAL><input type=hidden name=action value=1 /><input type=submit value=DESPEJAR></form></center>");
+
 
           client.println("</BODY>");
           client.println("</HTML>");
+
 
           delay(1);
           //stopping client
           client.stop();
 
           ///////////////////// control arduino pin
-          if (readString.indexOf("?acionar") > 0) //checks for on
+          if (readString.indexOf("action=1") > 0) //checks for on
           {
-            moverServo();
+            status= !status;
           }
           //clearing string for next read
           readString = "";
+        }
+
+        if (status = true){
+          moverServo();
         }
       }
     }
