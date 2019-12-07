@@ -1,0 +1,15 @@
+          client.println("<HTML>");
+          client.println("<HEAD>");
+          client.println("<meta http-equiv=\"refresh\" content=\"5\";>");
+          client.println("<TITLE>Despejar Cloro</TITLE>");
+          client.println("</HEAD>");
+          client.println("<BODY style=background-color:#2e405c>");
+
+          client.println("<center><H1><p style =\"font - family: fantasy; font - weight: 100\"><font color=\"white\">Deseja despejar o cloro?</H1></center>");
+
+          client.println("<BR> </BR >");
+          client.println("<center><form method=get name=MANUAL><input type=hidden name=action value=1 /><input type=submit value=DESPEJAR></form></center>");
+
+
+          client.println("</BODY>");
+          client.println("</HTML>");
