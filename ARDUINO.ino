@@ -93,7 +93,7 @@ void loop() {
           break;
         }
         if (c == '\n') {
-          // você está começando uma nova linha
+          //começando uma nova linha
           currentLineIsBlank = true;
         }
         else if (c != '\r') {
