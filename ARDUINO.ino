@@ -2,9 +2,9 @@
 #include <SPI.h>
 #include <Ethernet.h>
 
-byte mac[] = { 0x90, 0xA2, 0xDA, 0x0F, 0x09, 0xA7 }; //physical mac address
-byte ip[] = { 192, 168, 0, 99 }; // ip in lan
-byte gateway[] = { 192, 168, 0, 1 }; // internet access via router
+byte mac[] = { 0x1C, 0x6F, 0x65, 0xF6, 0xFD, 0x1C }; //physical mac address
+byte ip[] = { 10, 10, 111, 44 }; // ip in lan
+byte gateway[] = { 10, 10, 111, 254 }; // internet access via router
 byte subnet[] = { 255, 255, 255, 0 }; //subnet mask
 EthernetServer server(80); //server port
 
@@ -13,16 +13,26 @@ int pos = 0;
 Servo servo_9;
 int counter;
 
-boolean status = false;
-
 void setup()
 {
+  Serial.begin(9600);
   servo_9.attach(9);
 
   //start Ethernet
-  Ethernet.begin(mac, ip, gateway, subnet);
+  while (!Serial) {
+    ;
+  }
+  Serial.println("Ethernet WebServer Example");
+
+  Ethernet.begin(mac, ip);
   server.begin();
 
+  if (Ethernet.hardwareStatus() == EthernetNoHardware) {
+    Serial.println("EthernetShield was not found. Sorry, can't run without hardware.");
+    while (true) {
+      delay(1);
+    }
+  }
 }
 
 void moverServo() {
@@ -37,70 +47,71 @@ void moverServo() {
       delay(15); // Wait for 15 millisecond(s)
     }
   }
-  status = !status;
 }
 
-void loop()
-{
-  //Aguarda conexao do browser
+void loop() {
   EthernetClient client = server.available();
-
   if (client) {
+    Serial.println("new client");
+    // an http request ends with a blank line
+    boolean currentLineIsBlank = true;
     while (client.connected()) {
       if (client.available()) {
         char c = client.read();
 
-        //read char by char HTTP request
         if (readString.length() < 100) {
 
           //store characters to string
           readString += c;
           //Serial.print(c);
         }
-        //if HTTP request has ended
-        if (c == '\n') {
 
-          ///////////////
-          Serial.println(readString); //print to serial monitor for debuging
+        if (readString.indexOf("?action=1") > 0) //checks for on
+          {
+           moverServo();
+          }
 
-          client.println("HTTP/1.1 200 OK"); //send new page
+        Serial.write(c);
+        // if you've gotten to the end of the line (received a newline
+        // character) and the line is blank, the http request has ended,
+        // so you can send a reply
+        if (c == '\n' && currentLineIsBlank) {
+          // send a standard http response header
+          client.println("HTTP/1.1 200 OK");
           client.println("Content-Type: text/html");
+          client.println("Connection: close");
           client.println();
-
-          client.println("<HTML>");
+          client.println("<!DOCTYPE HTML>");
+          client.println("<html>");
+          // add a meta refresh tag, so the browser pulls again every 5 seconds:
           client.println("<HEAD>");
-          client.println("<meta http-equiv=\"refresh\" content=\"5\";>");
           client.println("<TITLE>Despejar Cloro</TITLE>");
           client.println("</HEAD>");
-          client.println("<BODY style=background-color:#2e405c>");
-
-          client.println("<center><H1><p style =\"font - family: fantasy; font - weight: 100\"><font color=\"white\">Deseja despejar o cloro?</H1></center>");
-
-          client.println("<BR> </BR >");
-          client.println("<center><form method=get name=MANUAL><input type=hidden name=action value=1 /><input type=submit value=DESPEJAR></form></center>");
-
-
+          client.println("<BODY>");
+          client.println("<H1>Deseja despejar o cloro?</H1>");
+          client.println("<form method=get name=MANUAL><input type=hidden name=action value=1 /><input type=submit value=DESPEJAR></form>");
           client.println("</BODY>");
           client.println("</HTML>");
-
-
-          delay(1);
-          //stopping client
-          client.stop();
-
-          ///////////////////// control arduino pin
-          if (readString.indexOf("action=1") > 0) //checks for on
-          {
-            status= !status;
-          }
-          //clearing string for next read
-          readString = "";
+          client.println("");
+          client.println("");
+          break;
         }
-
-        if (status = true){
-          moverServo();
+        if (c == '\n') {
+          // you're starting a new line
+          currentLineIsBlank = true;
+        }
+        else if (c != '\r') {
+          // you've gotten a character on the current line
+          currentLineIsBlank = false;
         }
       }
     }
+    // give the web browser time to receive the data
+    delay(1);
+    // close the connection:
+    client.stop();
+    Serial.println("client disonnected");
+    Serial.println(readString);
+
   }
 }
