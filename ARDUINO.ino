@@ -2,11 +2,11 @@
 #include <SPI.h>
 #include <Ethernet.h>
 
-byte mac[] = { 0x1C, 0x6F, 0x65, 0xF6, 0xFD, 0x1C }; //physical mac address
-byte ip[] = { 10, 10, 111, 44 }; // ip in lan
-byte gateway[] = { 10, 10, 111, 254 }; // internet access via router
-byte subnet[] = { 255, 255, 255, 0 }; //subnet mask
-EthernetServer server(80); //server port
+byte mac[] = { 0x1C, 0x6F, 0x65, 0xF6, 0xFD, 0x1C }; //endereço mac físico
+byte ip[] = { 10, 10, 111, 44 }; // ip na lan
+byte gateway[] = { 10, 10, 111, 254 }; // acesso a internet via roteador
+byte subnet[] = { 255, 255, 255, 0 }; //mascara subnet
+EthernetServer server(80); //porta do server
 
 String readString;
 int pos = 0;
@@ -39,12 +39,12 @@ void moverServo() {
   for (counter = 0; counter <= 1; ++counter) {
     for (pos = 90; pos <= 180; pos += 1) {
       servo_9.write(pos);
-      delay(15); // Wait for 15 millisecond(s)
+      delay(15); // esperar 1,5 segundos
     }
-    delay(4000); // Wait for 4000 millisecond(s)
+    delay(4000); // esperar 4 segundos
     for (pos = 180; pos >= 90; pos -= 1) {
       servo_9.write(pos);
-      delay(15); // Wait for 15 millisecond(s)
+      delay(15); // esperar 1,5 segundos
     }
   }
 }
@@ -53,7 +53,7 @@ void loop() {
   EthernetClient client = server.available();
   if (client) {
     Serial.println("new client");
-    // an http request ends with a blank line
+    // uma solicitação http termina com uma linha em branco
     boolean currentLineIsBlank = true;
     while (client.connected()) {
       if (client.available()) {
@@ -61,7 +61,7 @@ void loop() {
 
         if (readString.length() < 100) {
 
-          //store characters to string
+          //armazenar caracteres em sequência
           readString += c;
           //Serial.print(c);
         }
@@ -72,18 +72,14 @@ void loop() {
           }
 
         Serial.write(c);
-        // if you've gotten to the end of the line (received a newline
-        // character) and the line is blank, the http request has ended,
-        // so you can send a reply
         if (c == '\n' && currentLineIsBlank) {
-          // send a standard http response header
+          //envie um cabeçalho de resposta http padrão
           client.println("HTTP/1.1 200 OK");
           client.println("Content-Type: text/html");
           client.println("Connection: close");
           client.println();
           client.println("<!DOCTYPE HTML>");
           client.println("<html>");
-          // add a meta refresh tag, so the browser pulls again every 5 seconds:
           client.println("<HEAD>");
           client.println("<TITLE>Despejar Cloro</TITLE>");
           client.println("</HEAD>");
@@ -97,18 +93,18 @@ void loop() {
           break;
         }
         if (c == '\n') {
-          // you're starting a new line
+          // você está começando uma nova linha
           currentLineIsBlank = true;
         }
         else if (c != '\r') {
-          // you've gotten a character on the current line
+          // personagem na linha atual
           currentLineIsBlank = false;
         }
       }
     }
-    // give the web browser time to receive the data
+    // tempo ao navegador para receber os dados
     delay(1);
-    // close the connection:
+    // fecha a conexão:
     client.stop();
     Serial.println("client disonnected");
     Serial.println(readString);
