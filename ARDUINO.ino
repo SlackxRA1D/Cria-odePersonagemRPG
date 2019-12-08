@@ -79,8 +79,8 @@ void loop() {
           client.println();
           client.println("<HTML>");
           client.println("<HEAD>");
-          client.println("<link rel='stylesheet' type='text/css' href='https://raw.githubusercontent.com/SanyTamara/css-style/master/bootstrap.min.css' />");
-          client.println("");
+          client.println("https://sanytamara.github.io/css-styles/style.css'");
+          client.println("https://sanytamara.github.io/css-styles/bootstrap.css");
           client.println("<TITLE>Despejador de Cloro</TITLE>");
           client.println("</HEAD>");
           client.println("<BODY>");
@@ -102,7 +102,7 @@ void loop() {
           client.println("</div><div class='col-md-3'></div>");
           client.println("</div></div>");
           client.println("");
-          client.println("<br><p>Alunos: Sany Tamara, Matheus Felippe, Robert.a Medeiros</p></br>");
+          client.println("<center><br><p>Alunos: Sany Tamara, Matheus Felippe, Robert A. Medeiros</p></br></center>");
           client.println("</BODY>");
           client.println("</HTML>");
 
